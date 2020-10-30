@@ -2,6 +2,7 @@
   "dependencies": {
     "@types/node-fetch": "^2.5.7",
     "detritus-client": "^0.11.1",
+    "detritus-pagination": "^1.3.3",
     "node-fetch": "^2.6.1"
   }
 }
