@@ -47,10 +47,13 @@ export default class ReferenceCommand extends BaseCommand {
             name: 'Link',
             value: x.objectID
         }].concat(
-            fieldKeys.map((key) => ({
-                name: key,
-                value: x[key] as string
-            }))
+            fieldKeys
+                .map((key) => ({
+                    name: key,
+                    value: x[key] as string
+                }))
+                // Some fields might have empty strings, so we filter those out
+                .filter(x => x.value)
         );
 
         return {
