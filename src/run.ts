@@ -5,7 +5,13 @@ import { token } from '../config.json'
 const bot = new ArduinoBot(token, {
     directory: './commands',
     gateway: {
-        intents: ['GUILD_MESSAGES']
+        intents: ['GUILD_MESSAGES'],
+        presence: {
+            game: {
+                name: '-help',
+                type: 0
+            }
+        }
     }
 });
 

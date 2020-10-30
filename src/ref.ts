@@ -1,7 +1,5 @@
 import fetch from 'node-fetch';
 
-const SEARCH_URL = 'https://www.arduino.cc/search?tab=reference&q='
-
 export async function searchReference(query: string) {
     const result = await fetch("https://y2y10mz7jy-1.algolianet.com/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(4.5.1)%3B%20Browser%20(lite)%3B%20JS%20Helper%20(3.2.2)%3B%20react%20(16.13.1)%3B%20react-instantsearch%20(6.7.0)&x-algolia-api-key=1de4271379988b2cb3d797b07fca6805&x-algolia-application-id=Y2Y10MZ7JY", {
         "headers": {
