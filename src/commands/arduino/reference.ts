@@ -9,6 +9,12 @@ export interface CommandArgs {
   query: string
 }
 
+const fieldKeys = [
+    'parameters',
+    'returns',
+    'syntax'
+];
+
 export default class ReferenceCommand extends BaseCommand {
   name = 'reference'
 
@@ -32,45 +38,38 @@ export default class ReferenceCommand extends BaseCommand {
         return this.error(context, 'No results found.')
     }
 
-    const firstEntry = result[0];
-    const fields: {
-        name: string,
-        value: string,
-        inline?: boolean
-    }[] = [{
-        name: 'Link',
-        value: firstEntry.objectID
-    }];
+    const pages = result.map((x) => {
+        const fields: {
+            name: string,
+            value: string,
+            inline?: boolean
+        }[] = [{
+            name: 'Link',
+            value: x.objectID
+        }].concat(
+            fieldKeys.map((key) => ({
+                name: key,
+                value: x[key] as string
+            }))
+        );
 
-    if(firstEntry.parameters) fields.push({
-        name: 'Parameters',
-        value: firstEntry.parameters,
-        inline: true
-    })
+        return {
+            embed: {
+                author: {
+                    iconUrl: 'http://siminnovations.com/wiki/images/7/7a/Arduino_logo_round.png',
+                    name: x.breadcrumbs,
+                },
+                title: x.title,
+                description: x.description,
+                color: EmbedColors.ARDUINO,
+                fields
+            }
+        };
+    });
 
-    if(firstEntry.returns) fields.push({
-        name: 'Returns',
-        value: firstEntry.returns,
-        inline: true
-    })
-
-    if(firstEntry.syntax) fields.push({
-        name: 'Syntax',
-        value: firstEntry.syntax,
-        inline: true
-    })
-
-    return context.editOrReply({
-        embed: {
-            author: {
-                iconUrl: 'http://siminnovations.com/wiki/images/7/7a/Arduino_logo_round.png',
-                name: firstEntry.breadcrumbs,
-            },
-            title: firstEntry.title,
-            description: firstEntry.description,
-            color: EmbedColors.ARDUINO,
-            fields
-        }
-    })
+    await this.arduino.paginator.createReactionPaginator({
+        message: context.message,
+        pages
+    });
   }
 }
