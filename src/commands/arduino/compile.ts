@@ -45,7 +45,7 @@ export default class CompileCommand extends BaseCommand {
             }
             return context.editOrReply(`Success:\n${Markup.codeblock(res.message)}`)
         } catch(e) {
-            return this.error(context, e.stack)
+            console.log(e);
         }
     }
 
