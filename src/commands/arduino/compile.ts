@@ -36,13 +36,17 @@ export default class CompileCommand extends BaseCommand {
         await context.triggerTyping();
 
         this.activeExecutions.add(context.userId);
-        const res = await this.compileSketch(context.userId, parseCodeblocks(args.code));
-        this.activeExecutions.delete(context.userId);
-        if (!res.success) {
-            const message = res.message.split('\n').slice(1).join('\n');
-            return this.error(context, Markup.codeblock(Markup.escape.codeblock(message)))
+        try {
+            const res = await this.compileSketch(context.userId, parseCodeblocks(args.code));
+            this.activeExecutions.delete(context.userId);
+            if (!res.success) {
+                const message = res.message.split('\n').slice(1).join('\n');
+                return this.error(context, Markup.codeblock(Markup.escape.codeblock(message)))
+            }
+            return context.editOrReply(`Success:\n${Markup.codeblock(res.message)}`)
+        } catch(e) {
+            return this.error(context, e.message)
         }
-        return context.editOrReply(`Success:\n${Markup.codeblock(res.message)}`)
     }
 
     async compileSketch(userId: string, code: string): Promise<{ success: boolean, message: string }> {
