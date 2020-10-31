@@ -30,23 +30,19 @@ export default class CompileCommand extends BaseCommand {
     async run(context: Command.Context, args: CommandArgs) {
         if (!args.code) {
             return this.error(context, 'Provide some code.')
-        } else if(this.activeExecutions.has(context.userId)) {
+        } else if (this.activeExecutions.has(context.userId)) {
             return this.error(context, 'You already have a sketch compiling.')
         }
         await context.triggerTyping();
 
         this.activeExecutions.add(context.userId);
-        try {
-            const res = await this.compileSketch(context.userId, parseCodeblocks(args.code));
-            this.activeExecutions.delete(context.userId);
-            if (!res.success) {
-                const message = res.message.split('\n').slice(1).join('\n');
-                return this.error(context, Markup.codeblock(Markup.escape.codeblock(message)))
-            }
-            return context.editOrReply(`Success:\n${Markup.codeblock(res.message)}`)
-        } catch(e) {
-            console.log(e);
+        const res = await this.compileSketch(context.userId, parseCodeblocks(args.code));
+        this.activeExecutions.delete(context.userId);
+        if (!res.success) {
+            const message = res.message.split('\n').slice(1).join('\n');
+            return this.error(context, Markup.codeblock(Markup.escape.codeblock(message)))
         }
+        return context.editOrReply(`Success:\n${Markup.codeblock(res.message)}`)
     }
 
     async compileSketch(userId: string, code: string): Promise<{ success: boolean, message: string }> {
