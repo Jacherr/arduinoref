@@ -32,6 +32,6 @@ export class ArduinoBot extends CommandClient {
 
   onPrefixCheck(context: Context) {
     const userId = context.client.userId;
-    return new Set(['-', `<@${userId}>`, `<@!${userId}>`]);
+    return new Set(['>>', `<@${userId}>`, `<@!${userId}>`]);
   }
 }
