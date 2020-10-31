@@ -1,5 +1,6 @@
 import { CommandClient, CommandClientOptions, CommandClientRunOptions, ShardClient } from 'detritus-client';
 import { Context, Command } from 'detritus-client/lib/command';
+import { Paginator } from 'detritus-pagination';
 
 export interface ArduinoOptions extends CommandClientOptions {
   directory: string
@@ -8,6 +9,7 @@ export interface ArduinoOptions extends CommandClientOptions {
 export class ArduinoBot extends CommandClient {
   public client!: ShardClient
   public directory: string
+  public paginator: Paginator;
 
   constructor (token: string, options: ArduinoOptions) {
     super(token, {
@@ -16,6 +18,11 @@ export class ArduinoBot extends CommandClient {
     });
 
     this.directory = options.directory;
+    this.paginator = new Paginator(this.client, {
+      maxTime: 300_000,
+      pageLoop: true,
+      pageNumber: true
+    });
   }
 
   async resetCommands () {

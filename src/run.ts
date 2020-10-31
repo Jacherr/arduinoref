@@ -21,7 +21,7 @@ const bot = new ArduinoBot(token, {
         }
     },
     gateway: {
-        intents: ['GUILD_MESSAGES'],
+        intents: ['GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS'],
         presence: {
             game: {
                 name: '-help',
