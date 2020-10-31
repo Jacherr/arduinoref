@@ -39,6 +39,7 @@ export default class CompileCommand extends BaseCommand {
         const res = await this.compileSketch(context.userId, parseCodeblocks(args.code));
         this.activeExecutions.delete(context.userId);
         if (!res.success) {
+            // this parse removes the 'comamnd failed:' line, for a cleaner error output
             const message = res.message.split('\n').slice(1).join('\n');
             return this.error(context, Markup.codeblock(Markup.escape.codeblock(message)))
         }
