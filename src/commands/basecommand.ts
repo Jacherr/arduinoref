@@ -73,7 +73,7 @@ export class BaseCommand extends Command.Command {
   }
 
   async onRunError(context: Command.Context, _: any, error: any) {
-    const description: string[] = [error.message || error.stack];
+    const description: string[] = [error.message || error.stack || error];
 
     if (error.response) {
       const response: Response = error.response;
